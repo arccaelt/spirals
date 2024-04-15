@@ -111,6 +111,42 @@ class HyperbolicSpiral {
     }
 }
 
+/*
+    The Hyperbolic Spiral is defined by:
+        r = a * exp(b * theta)
+*/
+class LogarithmicSpiral {
+    constructor(resolution, a, theta) {
+        this.points = [];
+
+        for (let i = 0; i < resolution; i++) {
+            // polar coordinats
+            let angle = Math.exp(theta * i);
+            let r = a * angle;
+
+            // convert polar coordinats to carthesian coordinas
+            let x = r * Math.cos(angle);
+            let y = r * Math.sin(angle);
+
+            // adjust to reference point (center of the canvas)
+            x += center_x;
+            y += center_y;
+
+            this.points.push(new Point(x, y, RADIUS));
+        }
+    }
+
+    draw(context) {
+        for (let point of this.points) {
+            point.draw(context);
+        }
+    }
+
+    rotate(angle) {
+        this.points = this.points.map(point => point.rotate(angle));
+    }
+}
+
 class Point {
     constructor(x, y, radius) {
         this.x = x;
@@ -194,6 +230,11 @@ function refresh() {
             document.getElementById("b").disabled = true;
             console.log(`instatiating hyperbolic with ${a} and ${points} points and ${theta}`);
             spiral = new HyperbolicSpiral(points, a, theta);
+            break;
+        case "logarithmic":
+            document.getElementById("b").disabled = true;
+            console.log(`instatiating logarithmic with ${a} and ${points} points and ${theta}`);
+            spiral = new LogarithmicSpiral(points, a, theta);
             break;
     }
     spiral.draw(context);
